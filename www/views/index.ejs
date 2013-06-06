@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/main.js" async></script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <form>
+        <menu>
+            <input type="checkbox" id="allSelect"/>
+            <label for="allSelect">全选</label>
+            <input type="botton" value="删除选中"/>
+            <input id="add" type="botton" value="增加"/>
+            <input type="submit" value="保存更改"/>
+            只有保存更改后才会生效
+        </menu>
+        <ul>
+  <% for(var key in list){ %>
+  <li>
+      <input type="checkbox" />
+      <input type="text" value="<%=key %>" />
+      <input type="text" value="<%=list[key]%>" />
+      <input type="button" value="删除" />
+  </li>
+  <% } %>
+  </ul>
+    </form>
+  </body>
+</html>
