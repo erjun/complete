@@ -109,7 +109,7 @@ elseif borders[max(keys(borders))] == 'colon'
 	let prop = tolower(matchstr(line, '\zs[a-zA-Z-]*\ze\s*:[^:]\{-}$'))
     for key in keys(s:data)
         if prop == key
-            let values = s:data[key]
+            let values = s:data[key].val
             break
         endif
     endfor

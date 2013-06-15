@@ -1,0 +1,9 @@
+ html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td, input, textarea { margin: 0; padding: 0; }
+ body { font:12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif; background-color: #fff;  font-size: 12px;}
+ img{ vertical-align: top; border-width:0; }
+ ol,ul { list-style: none;}
+ li{ list-style-type: none;}
+ caption,th { text-align: left;}
+ address,caption,cite,code,dfn,ins,em,th,var { font-weight:normal; font-style:normal;} 
+ input,textarea{ font-size: 12px; padding: 2px;}
+

@@ -1,0 +1,48 @@
+<%- include header %>
+    <form method="post">
+        <menu>
+        </menu>
+        <table>
+        <thead>
+        <tr>
+            <td>
+                <input type="checkbox" id="allSelect"/>
+                <label for="allSelect">全选</label>
+            </td>
+            <td>key</td>
+            <td>val</td>
+            <td>doc</td>
+            <td>
+                <input type="button" value="删除选中"/>
+                <input id="add" type="button" value="增加"/>
+                <input type="submit" value="保存更改"/>
+                只有保存更改后才会生效
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+  <% for(var key in list){ %>
+            <tr>
+                <td width="55">
+                      <input type="checkbox" />
+                </td>
+                <td>
+                      <input type="text" value="<%=key %>" class="key" name="key"/>
+                </td>
+                <td>
+                      <input type="text" value="<%= list[key].val %>" class="val" name="val"/>
+                </td>
+                <td>
+                </td>
+                <td>
+                    <textarea name="doc" cols="30" ><%= list[key].doc %></textarea>
+                </td>
+                <td>
+      <input type="button" value="删除" class="del"/>
+                </td>
+            </tr>
+  <% } %>
+        </tbody>
+        </table>
+    </form>
+<%- include footer %>
