@@ -1,7 +1,6 @@
 " Vim completion script
 " Language:	CSS
 " Maintainer:	erjun
-" Last Change:	
 
     let s:values=[]
     let dataFile = $HOME.'/.vim/bundle/complete/json/css.json'
@@ -9,12 +8,25 @@
     for key in keys(s:data)
         call add(s:values,key)
     endfor
-    "2012-09-12增加
-    " let s:values+=split("border-radius box-shadow word-wrap resize background-origin background-clip background-size text-overflow opacity")
+fu! AddComplete(res,m,type)
+    let keyAfter = ''
+    if a:type == 'key'
+        let keyAfter = ':'
+    elseif a:type == 'atrule2'
+        let keyAfter = ' '
+    endif
+
+    let word = split(a:m,'|')
+    let info = get(word,1,'')
+    let menu = get(word,2,'all')
+
+    "call add(a:res,{'word': word[0] . keyAfter,'info':info})
+    call add(a:res,{'word': word[0] . keyAfter,'info':info,'menu':menu})
+endfu
 function! csscomplete#CompleteCSS(findstart, base)
 if a:findstart
-	" We need whole line to proper checking 我们需要整个行适当的检查
-	let line = getline('.') "得到光标所在行
+	" 检查整行
+	let line = getline('.') "光标所在行
 	let start = col('.') - 1 "光标前1个字符
 	let compl_begin = col('.') - 2 "光标前2个字符
 	while start >= 0 && line[start - 1] =~ '\%(\k\|-\)'
@@ -87,50 +99,51 @@ if exclam > -1
 	let borders[exclam] = "exclam"
 endif
 
-
+"key
 if len(borders) == 0 || borders[max(keys(borders))] =~ '^\%(openbrace\|semicolon\|opencomm\|closecomm\|style\)$'
 	" Complete properties
-
 
 	let entered_property = matchstr(line, '.\{-}\zs[a-zA-Z-]*$')
 
 	for m in s:values
 		if m =~? '^'.entered_property
-			call add(res, m . ':')
+            "if exists()
+            call AddComplete(res,m,'key')
 		elseif m =~? entered_property
-			call add(res2, m . ':')
+            call AddComplete(res2,m,'key')
 		endif
 	endfor
 
 	return res + res2
 
+"value
 elseif borders[max(keys(borders))] == 'colon'
-	" Get name of property 获取名称的属性
+	"  获取名称的属性
 	let prop = tolower(matchstr(line, '\zs[a-zA-Z-]*\ze\s*:[^:]\{-}$'))
     for key in keys(s:data)
         if prop == key
-            let values = s:data[key].val
+            let values = s:data[key]
             break
         endif
     endfor
-    " 如果json文件没有
-    "try
-    "    "let values = [line]
-	"	let element = tolower(matchstr(line, '\zs[a-zA-Z1-6]*\ze:[^:[:space:]]\{-}$'))
-	"	if stridx(',a,abbr,acronym,address,area,b,base,bdo,big,blockquote,body,br,button,caption,cite,code,col,colgroup,dd,del,dfn,div,dl,dt,em,fieldset,form,head,h1,h2,h3,h4,h5,h6,hr,html,i,img,input,ins,kbd,label,legend,li,link,map,meta,noscript,object,ol,optgroup,option,p,param,pre,q,samp,script,select,small,span,strong,style,sub,sup,table,tbody,td,textarea,tfoot,th,thead,title,tr,tt,ul,var,', ','.element.',') > -1
-	"		let values = ["first-child", "link", "visited", "hover", "active", "focus", "lang", "first-line", "first-letter", "before", "after"]
-	"	else
-	"		return []
-	"	endif
-    "endt
+
+    if exists('values') == 0
+        "let values = [line]
+        let element = tolower(matchstr(line, '\zs[a-zA-Z1-6]*\ze:[^:[:space:]]\{-}$'))
+        if stridx(',a,abbr,acronym,address,area,b,base,bdo,big,blockquote,body,br,button,caption,cite,code,col,colgroup,dd,del,dfn,div,dl,dt,em,fieldset,form,head,h1,h2,h3,h4,h5,h6,hr,html,i,img,input,ins,kbd,label,legend,li,link,map,meta,noscript,object,ol,optgroup,option,p,param,pre,q,samp,script,select,small,span,strong,style,sub,sup,table,tbody,td,textarea,tfoot,th,thead,title,tr,tt,ul,var,', ','.element.',') > -1
+            let values = ["first-child", "link", "visited", "hover", "active", "focus", "lang", "first-line", "first-letter", "before", "after"]
+        else
+            return []
+        endif
+    endif
 	" Complete values
 	let entered_value = matchstr(line, '.\{-}\zs[a-zA-Z0-9#,.(_-]*$')
 
 	for m in values
 		if m =~? '^'.entered_value
-			call add(res, m)
+            call AddComplete(res,m,'colon')
 		elseif m =~? entered_value
-			call add(res2, m)
+            call AddComplete(res2,m,'colon')
 		endif
 	endfor
 
@@ -149,7 +162,7 @@ elseif borders[max(keys(borders))] == 'exclam'
 
 	for m in values
 		if m =~? '^'.entered_imp
-			call add(res, m)
+            call AddComplete(res,m,'closebrace')
 		endif
 	endfor
 
@@ -193,9 +206,9 @@ elseif borders[max(keys(borders))] == 'atrule'
 
 		for m in values
 			if m =~? '^'.entered_atruleafter
-				call add(res, m)
+                call AddComplete(res,m,'atrule')
 			elseif m =~? entered_atruleafter
-				call add(res2, m)
+                call AddComplete(res2,m,'atrule')
 			endif
 		endfor
 
@@ -209,9 +222,10 @@ elseif borders[max(keys(borders))] == 'atrule'
 
 	for m in values
 		if m =~? '^'.entered_atrule
-			call add(res, m .' ')
+            call AddComplete(res,m,'atrule2')
+			"call add(res, m .' ')
 		elseif m =~? entered_atrule
-			call add(res2, m .' ')
+            call AddComplete(res2,m,'atrule2')
 		endif
 	endfor
 

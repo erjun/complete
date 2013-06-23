@@ -11,7 +11,6 @@
             </td>
             <td>key</td>
             <td>val</td>
-            <td>doc</td>
             <td>
                 <input type="button" value="删除选中"/>
                 <input id="add" type="button" value="增加"/>
@@ -30,12 +29,9 @@
                       <input type="text" value="<%=key %>" class="key" name="key"/>
                 </td>
                 <td>
-                      <input type="text" value="<%= list[key].val %>" class="val" name="val"/>
+                      <input type="text" value="<%= list[key] %>" class="val" name="val"/>
                 </td>
                 <td>
-                </td>
-                <td>
-                    <textarea name="doc" cols="30" ><%= list[key].doc %></textarea>
                 </td>
                 <td>
       <input type="button" value="删除" class="del"/>
